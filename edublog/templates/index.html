@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bulma.min.css' %}">
+    <script src="https://kit.fontawesome.com/1cbee15c00.js" crossorigin="anonymous"></script>
+
+    <title>Edublog</title>
+</head>
+
+<style>
+
+    #main{
+        width: 95%;
+        margin: auto;
+        justify-content: space-between;
+    }
+
+    a{
+        text-decoration: none;
+    }
+
+    #header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em;
+    }
+
+    #flex{
+        width: 50%;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+    }
+
+    .pagination{
+        width: 50%;
+        margin: auto;
+    }
+
+    .pagination a{
+        border: 1px solid blue;
+        color: blue;
+    }
+
+    #level{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #footer{
+        background-color: #485fc7;
+        color: #fff;
+        padding: 1em;
+    }
+
+    #footer .column{
+        text-align: center;
+    }
+
+    #footer a{
+        text-decoration: none;
+        color: #fff;
+    }
+
+    @media screen and (max-width: 600px){
+
+        #flex{
+            width: 100%;
+        }
+        
+    }
+
+</style>
+
+<body>
+
+    <header>
+
+        <nav class="navbar is-link" role="navigation" aria-label="main navigation">
+
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{% url 'index' %}">
+                  <img src="{% static 'images/logo.png' %}" width="" height="">
+                </a>
+          
+                <a role="button" class="navbar-burger is-active" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                  <span aria-hidden="true"></span>
+                  <span aria-hidden="true"></span>
+                  <span aria-hidden="true"></span>
+                </a>
+            </div>
+          
+            <div id="navbarBasicExample" class="navbar-menu is-active">
+
+                <div class="navbar-start">
+
+                    <div class="navbar-item">
+                        <a href="{% url 'index' %}" style="color: #fff"><i class="fas fa-home"></i> Home </a>
+                    </div>
+
+                    <div class="navbar-item">
+                        <a href="{% url 'add-post' %}" style="color: #fff"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Post </a>
+                    </div>
+            
+                    <div class="navbar-item has-dropdown is-hoverable">    
+                        <a class="navbar-link"><i class="fa fa-info-circle" aria-hidden="true"></i> More </a>
+            
+                        <div class="navbar-dropdown">    
+                            <a class="navbar-item" href="{% url 'about' %}"><i class="fa fa-info-circle" aria-hidden="true"></i> About </a>
+                            <a class="navbar-item" href="{% url 'about' %}"> <i class="fa fa-address-card"></i> Contact </a>    
+                            <hr class="navbar-divider">    
+                            <a class="navbar-item"> Report an issue </a>
+                        </div>
+
+                    </div>
+
+                </div>
+          
+                <div class="navbar-end"> 
+
+                    <form class="navbar-item" method="POST" action="{% url 'search-posts' %}">
+                        {% csrf_token %}
+
+                        <div class="field has-addons">
+
+                            <div class="control">
+                              <input class="input" type="search" style="background-color: transparent;" placeholder="Search posts..." aria-label="Search" name="searched" />
+                            </div>
+
+                            <div class="control">
+                              <button class="button is-primary" type="submit"> Search </button>
+                            </div>
+
+                        </div>
+                        
+                    </form>
+
+                    <div class="navbar-item"> 
+
+                        <div class="buttons"> 
+
+                            {% if user.is_superuser %}
+
+                                <a class="navbar-item button is-success is-light" href="{% url 'admin-approval' %}">
+                                    <span class="icon">
+                                        <i class="fa fa-user-circle"></i>
+                                    </span>
+                                    <span>Admin</span>
+                                </a>
+
+                            {% endif %}
+
+                            {% if user.is_authenticated %}
+
+                                <div class="navbar-item has-dropdown is-hoverable">    
+                                    <a class="navbar-link">
+                                        <img src="{{user_profile.profileimg.url}}" class="header-avatar" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
+                                    </a>
+                        
+                                    <div class="navbar-dropdown">    
+
+                                        <a class="navbar-item button is-primary is-light" href="{% url 'settings' %}">
+                                            <span class="icon">
+                                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                            </span>
+                                            <span>Account settings</span>
+                                        </a>
+
+                                        <a class="navbar-item button is-link is-light" href="profile/{{user_profile.user}}">
+                                            <span class="icon">
+                                                <i class="fa fa-user-circle"></i>
+                                            </span>
+                                            <span>Profile</span>
+                                        </a>
+
+                                        <hr class="navbar-divider"> 
+                                        <a class="navbar-item button is-warning is-light" href="{% url 'logout' %}">
+                                            <span class="icon">
+                                                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                            </span>
+                                            <span>Log Out</span>
+                                        </a> 
+
+                                    </div>
+            
+                                </div>  
+
+                            {% else %}
+
+                                <a class="navbar-item button is-primary is-light" href="{% url 'register' %}">
+                                    <span class="icon">
+                                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                    </span>
+                                    <span>Sign up</span>
+                                </a>
+    
+                                <a class="navbar-item button is-light is-light" href="{% url 'login' %}">
+                                    <span class="icon">
+                                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                    </span>
+                                    <span>Log in</span>
+                                </a>
+
+                            {% endif %}  
+
+                        </div>    
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+    </header>
+
+    {% block content %}
+
+        <main class="columns is-tablet" id="main">
+
+            <article class="column is-half" id="article">
+
+                <h1 style="text-transform: uppercase; font-size: 20px; text-align: center; font-weight: bold; color: #46436d; margin-top: 1em; margin-bottom: 1em;">Blog Posts...</h1>
+
+                {% for post in posts %}
+                {% if post.approved %}
+                <div class="card" id="card">
+
+                    <header class="card-header" id="header">
+                        
+                        <b>{{ post.title }}</b>
+                        <b><a href="{% url 'delete-post' post.id %}" style="color: red">Delete</a></b>
+                    
+                    </header>
+
+                    <div class="card-image">
+                        <figure class="image is-5by3">
+                            <img src="{{post.image.url}}" alt="Placeholder image">
+                        </figure>
+                    </div>
+
+                    <div class="card-content">
+
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <strong>{{ post.user }}</strong> 
+                                            <small><a href="/profile/{{post.user}}">@{{ post.user }}</a></small> 
+                                            <small>{{ post.created_at }}</small>
+                                            <br> {{ post.content }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                          </div>
+
+                    </div>
+                    
+
+                    <footer class="card-footer">
+
+                        <p class="card-footer-item">
+                          <span> 
+                            <a href="{% url 'show-post' post.id %}" class="icon is-small"> <i class="fa fa-eye" aria-hidden="true"></i> </a>
+                            View Post
+                          </span>
+                        </p>
+
+                        <p class="card-footer-item">
+                          <span> 
+                            <a href="/like-post?post_id={{post.id}}" class="icon is-small"> <i class="fas fa-heart" aria-hidden="true"></i> </a>
+                                {% if post.no_of_likes == 0 %}
+                                    0 like
+                                    {% elif post.no_of_likes == 1 %}
+                                    {{post.no_of_likes}} like
+                                    {% else %}
+                                    {{post.no_of_likes}} likes
+                                {% endif %}
+                          </span>
+                        </p>
+                        
+                        <p class="card-footer-item">
+                            <span> 
+                              <a href="{% url 'show-post' post.id %}" class="icon is-small"> <i class="fa fa-comment" aria-hidden="true"></i> </a>
+                              Add Comment
+                            </span>
+                          </p>
+                    </footer>
+
+                </div>
+                <br />
+            {% endif %}
+        {% endfor %}
+                
+            </article>
+
+            <aside class="column">
+                
+                <div class="first">
+
+                    <h2 class="" style="text-transform: uppercase; font-size: 20px; text-align: center; font-weight: bold; color: #46436d; margin-top: 1em; margin-bottom: 1em;">Users You Can Follow</h2>
+
+                    {% for suggestion in suggestions_username_profile_list %}
+                        <div id="flex">
+
+                            <a href="/profile/{{suggestion.user}}">
+                                <img src="{{suggestion.profileimg.url}}" class="" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
+                            </a>
+
+                            <span class="block capitalize font-semibold"> {{suggestion.user}} </span> 
+                        
+                            <a href="/profile/{{suggestion.user}}" class="button is-link is-outlined"> View User </a>
+                        
+                        </div> <hr />
+                    {% endfor %}
+
+                </div>
+
+                <div class="second">
+                    <h2 class="" style="text-transform: uppercase; font-size: 20px; text-align: center; font-weight: bold; color: #46436d; margin-top: 1em; margin-bottom: 1em;">Categories</h2>
+
+                    {% for category in categorys %}
+                    <div id="flex">
+
+                        <a href="{% url 'show-category' category.id %}">
+                            <img src="{{category.image.url}}" class="" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
+                        </a>
+
+                        <span class="block capitalize font-semibold"> {{category.user}} </span> 
+                    
+                        <a id="view" href="{% url 'show-category' category.id %}" class="button is-link is-outlined"> View </a>
+                    
+                    </div> <hr />
+                    {% endfor %}
+
+                </div>
+
+            </aside>
+
+        </main>
+
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+
+            {% if posts.has_previous %}
+            <a class="pagination-previous" href="?page=1">&laquo; First</a>
+            <a class="pagination-previous" href="?page={{ posts.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            <ul class="pagination-list">
+                {% for i in nums %}
+              <li>
+                <a class="pagination-link" aria-label="Goto page 1" href="?page={{ forloop.counter }}">
+                    {{ forloop.counter }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+
+            
+            {% if posts.has_next %}
+            <a class="pagination-next" href="?page={{ posts.next_page_number }}">Next page</a>
+            <a class="pagination-next" href="?page={{ posts.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+
+          </nav>
+
+          <footer class="columns" id="footer">
+
+                <div class="column">
+                    <h5>Links</h5>
+                        <a href="{% url 'index' %}">Home</a>
+                        <a href="{% url 'about' %}">About</a>
+                        <a href="{% url 'about' %}">Contact</a>
+                </div>
+                </div>
+
+                <div class="column">
+
+                    <a class="button is-success" href="http://www.facebook.com/profile.php?id="><i class="fab fa-facebook"></i></a>
+                    <a class="button is-primary" href="http://www.linkedin.com/in/"><i class="fab fa-linkedin"></i></a>
+                    <a class="button is-link" href="http://twitter.com/"><i class="fab fa-twitter"></i></a>
+                    <a class="button is-danger" href="http://youtube.com/"><i class="fab fa-youtube"></i></a>
+                    <a class="button is-warning" href="mailto:"><i class="fas fa-envelope"></i></a>
+
+                </div>
+                
+                <div class="column">
+                    <p>© All rights reserved {{ current_year }} Faozziyyah Daud</p>
+                </div>
+
+          </footer>
+
+    {% endblock content %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+        
+        // Add a click event on each of them
+        $navbarBurgers.forEach( el => {
+          el.addEventListener('click', () => {
+        
+            // Get the target from the "data-target" attribute
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+        
+            // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+        
+          });
+        });
+        
+        });
+    </script>
+    
+</body>
+</html>

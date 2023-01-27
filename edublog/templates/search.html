@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if searched %}
+
+        <h1 style="text-transform: uppercase; font-size: 25px; text-align: center; font-weight: bold; color: #46436d; margin-top: 1em;">You searched for {{ searched }}</h1> <br /> 
+
+        <table class="table is-striped is-hoverable is-bordered" id="searchtable">
+            {% for post in posts %}
+                <tr>
+                    <td> {{ post }}  - <a href="{% url 'show-post' post.id %}">{{ post.title }}</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+
+        <h1 style="color: red; text-align: center; margin-top: 1em;">You Forgot To Search For A Post!!!</h1>
+
+    {% endif %}
+
+{% endblock %}
