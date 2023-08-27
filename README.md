@@ -25,12 +25,12 @@ Users should be able to:
 
 - Add a post.
 - View each post.
-- Add comment to post and like a post.
+- Add comments to the post and like a post.
 - Follow and unfollow users.
 - View post categories.
-- Login as a user and logout.
-- Update and delete post.
-- Search for post.
+- Login as a user and log out.
+- Update and delete posts.
+- Search for posts.
 - View the optimal layout for the site depending on their device's screen size
 
 ### Screenshot
