@@ -25,6 +25,10 @@
         text-decoration: none;
     }
 
+    #card{
+        width: 80%;
+    }
+
     #header{
         display: flex;
         justify-content: space-between;
@@ -32,8 +36,15 @@
         padding: 1em;
     }
 
+    .first-inner{
+        box-shadow:0 .5em 1em -.125em;
+        padding: 1em;
+        width: 60%;
+        margin: auto;
+    }
+
     #flex{
-        width: 50%;
+        width: 100%;
         margin: auto;
         display: flex;
         justify-content: space-between;
@@ -89,7 +100,7 @@
 
             <div class="navbar-brand">
                 <a class="navbar-item" href="{% url 'index' %}">
-                  <img src="{% static 'images/logo.png' %}" width="" height="">
+                  <img src="{% static 'images/dictionary.png' %}" style="width: 100%; height: 200px;">
                 </a>
           
                 <a role="button" class="navbar-burger is-active" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -309,38 +320,46 @@
 
                     <h2 class="" style="text-transform: uppercase; font-size: 20px; text-align: center; font-weight: bold; color: #46436d; margin-top: 1em; margin-bottom: 1em;">Users You Can Follow</h2>
 
-                    {% for suggestion in suggestions_username_profile_list %}
-                        <div id="flex">
+                    <div class="first-inner">
 
-                            <a href="/profile/{{suggestion.user}}">
-                                <img src="{{suggestion.profileimg.url}}" class="" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
-                            </a>
+                        {% for suggestion in suggestions_username_profile_list %}
+                            <div id="flex">
 
-                            <span class="block capitalize font-semibold"> {{suggestion.user}} </span> 
-                        
-                            <a href="/profile/{{suggestion.user}}" class="button is-link is-outlined"> View User </a>
-                        
-                        </div> <hr />
-                    {% endfor %}
+                                <a href="/profile/{{suggestion.user}}">
+                                    <img src="{{suggestion.profileimg.url}}" class="" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
+                                </a>
+
+                                <span class="block capitalize font-semibold"> {{suggestion.user}} </span> 
+                            
+                                <a href="/profile/{{suggestion.user}}" class="button is-link is-outlined"> View User </a>
+                            
+                            </div> <hr />
+                        {% endfor %}
+
+                    </div>
 
                 </div>
 
                 <div class="second">
                     <h2 class="" style="text-transform: uppercase; font-size: 20px; text-align: center; font-weight: bold; color: #46436d; margin-top: 1em; margin-bottom: 1em;">Categories</h2>
 
-                    {% for category in categorys %}
-                    <div id="flex">
+                    <div class="first-inner">
 
-                        <a href="{% url 'show-category' category.id %}">
-                            <img src="{{category.image.url}}" class="" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
-                        </a>
+                        {% for category in categorys %}
+                            <div id="flex">
+                            
+                                <a href="{% url 'show-category' category.id %}">
+                                    <img src="{{category.image.url}}" class="" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
+                                </a>
+                            
+                                <span class="block capitalize font-semibold"> {{category.user}} </span> 
+                            
+                                <a id="view" href="{% url 'show-category' category.id %}" class="button is-link is-outlined"> View </a>
+                            
+                            </div> <hr />
+                        {% endfor %}
 
-                        <span class="block capitalize font-semibold"> {{category.user}} </span> 
-                    
-                        <a id="view" href="{% url 'show-category' category.id %}" class="button is-link is-outlined"> View </a>
-                    
-                    </div> <hr />
-                    {% endfor %}
+                    </div>
 
                 </div>
 

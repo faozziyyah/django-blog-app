@@ -1,8 +1,241 @@
-{% extends 'base.html' %}
-
 
 {% block content %}
 
+<style>
+
+    body{
+        background-color: #1e0d49;
+    }
+
+    #main{
+        background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('../static/images/IMG_20210426_031056.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        width: 70%;
+        height: 100vh;
+        margin: auto;
+        margin-bottom: 1em;
+    }
+
+    #header {	
+        background-color: #c2c1d1;	
+        height: 800px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: auto;
+        margin-top: 10em;
+        justify-content: space-between;
+        text-align: center;
+        border-top-left-radius: 50px;
+        border-top-right-radius: 50px;
+    }
+
+    #top{
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        margin: auto;
+        padding-bottom: 2em;
+    }
+
+    #top > img {
+        width: 15%;
+        border: 4px solid #1e0d49;
+        border-radius: 50%;
+        /*box-shadow: 5px 5px 5px black; */
+        position: relative;
+        z-index: 999999;
+        top: -3em;
+    }
+
+    form {
+        align-self: flex-end;
+    }
+
+    li{
+        list-style-type: none;
+    }
+
+    article {
+        background-color: #e0dfdf;
+        display: flex;
+        flex-direction: column;
+    }
+
+    aside{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 80%;
+        margin: auto;
+        margin-top: -2em;
+    }
+
+    #actions{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        width: 50%;
+        margin-bottom: 1em;
+    }
+
+    #home, #follow, #setting {
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        border-radius: 50px;
+        padding: 10px 2em;
+    }
+
+    #home {
+        text-decoration: none;
+        color: #1e0d49;
+        /*font-size: 27px;*/ 
+        font-weight: bold;
+        width: 20%;
+        background-color: #e0dfdf;
+        box-shadow: 1px 5px 3px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    #follow, #setting{
+        box-shadow: 1px 5px 3px 1px #9285b3;
+        border: none;
+        outline: none;
+        background-color: #1e0d49;
+        text-decoration: none;
+        color: #e0dfdf;
+    }
+
+    #info{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: center;
+        width: 50%;
+        margin: auto;
+        color: #1e0d49;
+    }
+
+    article{
+        background-color: #fff;
+        width: 100%;
+        border-top-left-radius: 50px;
+        border-top-right-radius: 50px;
+    }
+
+    #posts {
+        background-color: transparent;
+        display: flex;
+        justify-content: space-between;
+        width: 90%;
+        margin: auto;
+        margin-bottom: 2em;
+        margin-top: 1em;
+        border-top-left-radius: 50px;
+        border-top-right-radius: 50px;
+    }
+
+</style>
+
+<div id="main">
+
+    <div id="header">
+
+        <section id="top">
+
+            {% if user_followers == 0 or user_followers == 1 %}
+                <span style="color: #1e0d49; font-size: 20px; margin-top: 1em;">
+                    <b>{{user_followers}} <br /> follower</b>
+                </span>
+                {% else %}
+                <span style="color: #1e0d49; font-size: 20px; margin-top: 1em;">
+                    <b>{{user_followers}} <br />  followers</b>
+                </span>
+            {% endif %}
+
+            <img src="{{user_profile.profileimg.url}}" alt="">
+
+            <span style="color: #1e0d49; font-size: 20px; margin-top: 1em;">
+                <b>{{user_following}} <br />  following</b>
+            </span>
+
+        </section>
+
+        <aside>
+
+            <h3 style="color: #1e0d49; text-transform: capitalize; font-size: 27px; margin-top: -1px;">{{user_profile.user.username}}</h3>
+            <p style="color: #1e0d49; margin-top: -1em;"> <b>About:</b> {{user_profile.bio}}</p>
+            <p style="color: #1e0d49; margin-top: -10px;"> <b>Location:</b> {{user_profile.location}}</p>
+
+            <div id="actions">
+
+                <a id="home" href="/index">Home</a>
+
+                <form action="/follow" method="POST">
+                    {% csrf_token %}
+        
+                    <input type="hidden" value="{{user.username}}" name="follower" />
+                    <input type="hidden" value="{{user_object.username}}" name="user" />
+                    
+                    {% if user_object.username == user.username %}
+                    <a href="/settings" id="setting">Account Settings</a>
+                    {% else %}
+                    <a data-ripple="">
+                        <button type="submit" id="follow" style="cursor: pointer;">{{button_text}}</button>
+                    </a>
+                    {% endif %}
+        
+                </form>
+
+            </div>
+            
+        </aside>
+        
+        <div id="info">
+
+            <b><h3 style="font-size: 20px;">Posts Created...</h3></b>
+            
+            {% if user_post_length == 0 %}
+                <span style="font-size: 20px;">
+                    <b>No Post</b>
+                </span>
+                {% elif user_post_length == 1 %}
+                <span style="font-size: 20px;">
+                    <b>{{user_post_length}} Post</b>
+                </span>
+                {% else %}
+                <span style="font-size: 20px;">
+                    <b>{{user_post_length}} Posts</b>
+                </span>
+            {% endif %}
+    
+        </div>
+
+        <article>
+            <section id="posts">	
+    
+                {% for post in user_posts %}
+                    <li>
+                        <a class="strip" href="{% url 'show-post' post.id %}" title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
+                            <img src="{{post.image.url}}" style="height: 250px; width: 300px;" alt="">
+                        </a>
+                    </li>
+                {% endfor %}
+    
+            </section>
+        </article>
+
+    </div>
+
+</div>
+
+<!---
 <header class="" id="header">
 
     <img src="{{user_profile.profileimg.url}}" alt="">
@@ -84,5 +317,6 @@
 
     </section>
 
-</article>
+</article>-->
+
 {% endblock %}

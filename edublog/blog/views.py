@@ -15,7 +15,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 
-
 # Create your views here.
 def signin(request):
     

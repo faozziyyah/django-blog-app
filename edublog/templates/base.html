@@ -192,7 +192,7 @@
 
             <div class="navbar-brand">
                 <a class="navbar-item" href="{% url 'index' %}">
-                    <img src="{% static 'images/logo.png' %}" width="" height="">
+                    <img src="{% static 'images/dictionary.png' %}" width="" height="">
                 </a>
           
                 <a role="button" class="navbar-burger is-active" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -206,13 +206,17 @@
 
                 <div class="navbar-start">
 
-                    <div class="navbar-item">
-                        <a href="{% url 'index' %}" class="nava"><i class="fas fa-home"></i> Home </a>
-                    </div>
+                    {% if user.is_authenticated %}
 
-                    <div class="navbar-item">
-                        <a href="{% url 'add-post' %}" class="nava"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Post </a>
-                    </div>
+                        <div class="navbar-item">
+                            <a href="{% url 'index' %}" class="nava"><i class="fas fa-home"></i> Home </a>
+                        </div>
+
+                        <div class="navbar-item">
+                            <a href="{% url 'add-post' %}" class="nava"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Post </a>
+                        </div>  
+
+                    {% endif %}
             
                     <div class="navbar-item has-dropdown is-hoverable">    
                         <a class="navbar-link"><i class="fa fa-info-circle" aria-hidden="true"></i> More </a>
@@ -230,22 +234,26 @@
           
                 <div class="navbar-end"> 
 
-                    <form class="navbar-item" method="POST" action="{% url 'search-posts' %}">
-                        {% csrf_token %}
-        
-                        <div class="field has-addons">
+                    {% if user.is_authenticated %}
 
-                            <div class="control">
-                              <input class="input" type="search" style="background-color: transparent;" placeholder="Search posts..." aria-label="Search" name="searched" />
-                            </div>
-
-                            <div class="control">
-                              <button class="button is-primary" type="submit"> Search </button>
-                            </div>
-
-                        </div>
+                        <form class="navbar-item" method="POST" action="{% url 'search-posts' %}">
+                            {% csrf_token %}
                         
-                    </form>
+                            <div class="field has-addons">
+
+                                <div class="control">
+                                  <input class="input" type="search" style="background-color: transparent;" placeholder="Search posts..." aria-label="Search" name="searched" />
+                                </div>
+
+                                <div class="control">
+                                  <button class="button is-primary" type="submit"> Search </button>
+                                </div>
+
+                            </div>
+
+                        </form>  
+
+                    {% endif %}
 
                     <div class="navbar-item"> 
 
@@ -264,7 +272,8 @@
 
                             {% if user.is_authenticated %}
 
-                                <div class="navbar-item has-dropdown is-hoverable">    
+                                <div class="navbar-item has-dropdown is-hoverable"> 
+
                                     <a class="navbar-link">
                                         <img src="{{user_profile.profileimg.url}}" class="header-avatar" style="width: 32px; height: 32px; border-radius: 100%; margin-left: 15px;">
                                     </a>
